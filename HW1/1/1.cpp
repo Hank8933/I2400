@@ -88,7 +88,7 @@ char findR(string s)
 {
 	int length = s.size();
 
-	if (length == 1) return s[0];
+	if (length < 2) return s[0];
 
 	if (s[length - 1] < s[0]) s[0] = s[length - 1];
 
@@ -113,27 +113,17 @@ string removeI(string s)
 	return s;
 }
 
-string removeR2(string s, int i)
-{
-	if (i == 0) return s;
-	int length = s.size();
-
-	if (s[i] == s[i - 1]) {
-		for (int j = i; j < length; j++) {
-			s[j] = s[j + 1];
-		}
-		return removeR2(s, i);
-	}
-	return removeR2(s, --i);
-}
-
 string removeR(string s)
 {
 	int length = s.size();
 
-	s = removeR2(s, length - 1);
+	if (length < 2) return s;
 
-	return s;
+	string tmp = removeR(s.substr(1, length - 1));
+
+	if (s[0] != tmp[0]) return s[0] + tmp;
+
+	return tmp;
 }
 
 int TI(int m, int n)
