@@ -133,17 +133,17 @@ void PrintPoly2(polynomial_term t[], int start, int finish)
 
 		if (pre_max_expo == _CRT_INT_MAX) {
 			if (!max_expo) {
-				printf("%d", max_coef);
+				if (max_coef) printf("%d", max_coef);
 				break;
 			}
-			else printf("%dX^%d", max_coef, max_expo);
+			else if (max_coef) printf("%dX^%d", max_coef, max_expo);
 		}
 		else {
 			if (!max_expo) {
 				if (max_coef) printf(" + %d", max_coef);
 				break;
 			}
-			else printf(" + %dX^%d", max_coef, max_expo);
+			else if (max_coef) printf(" + %dX^%d", max_coef, max_expo);
 		}
 		
 
