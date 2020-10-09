@@ -75,6 +75,8 @@ void addArrayBasedPoly(polynomialTerm a[], polynomialTerm b[], polynomialTerm d[
 		}
 		else if (a[i].expo == b[j].expo) {
 			d[k] = { a[i].coef + b[j].coef, a[i].expo };
+			if (!d[k].coef)
+				k--;
 			i++;
 			j++;
 		}
