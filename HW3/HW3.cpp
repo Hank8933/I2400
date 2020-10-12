@@ -50,7 +50,13 @@ void inputTerm(polynomialTerm t[], int coef, int expo)
 
 	for (int i = 0; i < MAX_TERMS; i++) {
 		if (t[i].expo == expo) {
-			t[i].coef = coef;
+			if (coef) {
+				t[i].coef = coef;
+				return;
+			}
+			for (int j = i; j < MAX_TERMS - 1; j++) {
+				t[j] = t[j + 1];
+			}
 			return;
 		}
 		if (t[i].expo < expo) {
