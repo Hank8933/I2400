@@ -59,7 +59,7 @@ void inputTerm(polynomialTerm t[], int coef, int expo)
 			}
 			return;
 		}
-		if (t[i].expo < expo) {
+		if (t[i].expo < expo && coef) {
 			tmp = t[i];
 			t[i] = { coef, expo };
 			expo = tmp.expo;
