@@ -55,7 +55,7 @@ void inputTerms(polynomialTerm terms[], int coef, int expo)
 			}
 			return;
 		}
-		if (terms[i].expo < expo) {
+		if (terms[i].expo < expo && coef) {
 			tmp = terms[i];
 			terms[i] = { coef, expo };
 			expo = tmp.expo;
@@ -75,8 +75,16 @@ void inputLinkTerms(linkedPolynomialTerm*& polyPtr, int coef, int expo)
 	tmpPtr->expo = expo;
 
 	if (!polyPtr || polyPtr->expo <= expo) {  // 擺第一
-		if (polyPtr && polyPtr->expo == expo)  // 重複取代
-			tmpPtr->nextTermPtr = polyPtr->nextTermPtr;
+		if (polyPtr && polyPtr->expo == expo) { // 重複取代
+			if (coef) {
+				tmpPtr->nextTermPtr = polyPtr->nextTermPtr;
+			}
+			else {
+				tmpPtr = polyPtr->nextTermPtr;
+			}
+		}
+		else if (!coef)
+			return;
 		else
 			tmpPtr->nextTermPtr = polyPtr;
 		polyPtr = tmpPtr;
@@ -85,16 +93,25 @@ void inputLinkTerms(linkedPolynomialTerm*& polyPtr, int coef, int expo)
 		linkedPolynomialTerm* tmp = polyPtr;
 		while (true) {
 			if (tmp->nextTermPtr && tmp->nextTermPtr->expo <= expo) {  // 擺中間
-				if (tmp->nextTermPtr->expo == expo)  // 重複取代
-					tmpPtr->nextTermPtr = tmp->nextTermPtr->nextTermPtr;
+				if (tmp->nextTermPtr->expo == expo) {  // 重複取代
+					if (coef) {
+						tmpPtr->nextTermPtr = tmp->nextTermPtr->nextTermPtr;
+					}
+					else {
+						tmpPtr = tmp->nextTermPtr->nextTermPtr;
+					}
+				}
+				else if (!coef) break;
 				else
 					tmpPtr->nextTermPtr = tmp->nextTermPtr;
 				tmp->nextTermPtr = tmpPtr;
 				break;
 			}
 			else if (!tmp->nextTermPtr) {  // 擺最後
-				tmp->nextTermPtr = tmpPtr;
-				tmpPtr->nextTermPtr = nullptr;
+				if (coef) {
+					tmp->nextTermPtr = tmpPtr;
+					tmpPtr->nextTermPtr = nullptr;
+				}
 				break;
 			}
 			tmp = tmp->nextTermPtr;
