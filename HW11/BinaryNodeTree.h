@@ -236,7 +236,9 @@ void BinaryNodeTree<ItemType>::inorder(void visit(ItemType&), BinaryNode<ItemTyp
    if (treePtr != nullptr)
    {
       inorder(visit, treePtr->getLeftChildPtr());
-      visit( treePtr->getItem() );
+      ItemType theItem = treePtr->getItem();
+      visit(theItem);
+      //visit((ItemType&)treePtr->getItem() );
       inorder(visit, treePtr->getRightChildPtr());
    }  // end if
 }  // end inorder

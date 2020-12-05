@@ -30,6 +30,9 @@ protected:
    //------------------------------------------------------------
    // Recursively finds where the given node should be placed and
    // inserts it in a leaf at that point.
+
+	void destroyTree(BinaryNode<ItemType>* subTreePtr);
+
    BinaryNode<ItemType>* insertInorder(BinaryNode<ItemType>* subTreePtr,
                                        BinaryNode<ItemType>* newNode);
    
@@ -170,20 +173,16 @@ void BinarySearchTree<ItemType>::levelorder(void visit(BinaryNode<ItemType>&), B
 	// the following is actually an interative inoder
 	// replace the code with yours
 
-
-	do {
-		while ( tmpPtr != NULL ) {
-			nodeStack.push( tmpPtr );
-			tmpPtr = tmpPtr->getLeftChildPtr();
-		}
-
-		if ( ! nodeStack.empty() ) {
-			tmpPtr = nodeStack.top();
-			visit( *tmpPtr );
-			nodeStack.pop();
-			tmpPtr = tmpPtr->getRightChildPtr();
-		}
-	} while ( ! nodeStack.empty() || tmpPtr != NULL );
+	if (treePtr)
+		nodeQueue.push(treePtr);
+	while (!nodeQueue.empty()) {
+		visit(*nodeQueue.front());
+		if (nodeQueue.front()->getLeftChildPtr())
+			nodeQueue.push(nodeQueue.front()->getLeftChildPtr());
+		if (nodeQueue.front()->getRightChildPtr())
+			nodeQueue.push(nodeQueue.front()->getRightChildPtr());
+		nodeQueue.pop();
+	}
 }  // end levelorder
 
 template<class ItemType>
@@ -195,6 +194,17 @@ bool BinarySearchTree<ItemType>::add(const ItemType& newData)
 }  // end add
 
 template<class ItemType>
+void BinarySearchTree<ItemType>::destroyTree(BinaryNode<ItemType>* subTreePtr)
+{
+	if (subTreePtr != nullptr)
+	{
+		destroyTree(subTreePtr->getLeftChildPtr());
+		destroyTree(subTreePtr->getRightChildPtr());
+		delete subTreePtr;
+	}  // end if
+}
+
+template<class ItemType>
 BinaryNode<ItemType>* BinarySearchTree<ItemType>::insertInorder(BinaryNode<ItemType>* subTreePtr,
                                                             BinaryNode<ItemType>* newNodePtr)
 {
@@ -203,7 +213,10 @@ BinaryNode<ItemType>* BinarySearchTree<ItemType>::insertInorder(BinaryNode<ItemT
 
 	BinaryNode<ItemType>* tempPtr;
 
-	if ( subTreePtr->getItem() > newNodePtr->getItem() ) {
+	if (subTreePtr->getItem() == newNodePtr->getItem()) {
+		subTreePtr->setCount(subTreePtr->getCount() + 1);
+	}
+	else if ( subTreePtr->getItem() > newNodePtr->getItem() ) {
 		tempPtr = insertInorder( subTreePtr->getLeftChildPtr(), newNodePtr );
 		subTreePtr->setLeftChildPtr( tempPtr );
 	}
@@ -235,7 +248,10 @@ BinaryNode<ItemType>* BinarySearchTree<ItemType>::removeValue(BinaryNode<ItemTyp
 	}
 	
 	if ( subTreePtr->getItem() == target ) {
-		subTreePtr = removeNode( subTreePtr );
+		if (subTreePtr->getCount() > 1) 
+			subTreePtr->setCount(subTreePtr->getCount() - 1);
+		else
+			subTreePtr = removeNode( subTreePtr );
 		success = true;
 		return subTreePtr;
 	}
@@ -278,10 +294,10 @@ BinaryNode<ItemType>* BinarySearchTree<ItemType>::removeNode(BinaryNode<ItemType
 	ItemType newNodeValue;
 	int newWordCount;
 
-	tempPtr = removeLeftmostNode( nodePtr->getRightChildPtr(), newNodeValue, newWordCount );
-	nodePtr->setRightChildPtr( tempPtr );
-//	tempPtr = removeRightmostNode( nodePtr->getLeftChildPtr(), newNodeValue, newWordCount );
-//	nodePtr->setLeftChildPtr( tempPtr );
+//	tempPtr = removeLeftmostNode( nodePtr->getRightChildPtr(), newNodeValue, newWordCount );
+//	nodePtr->setRightChildPtr( tempPtr );
+	tempPtr = removeRightmostNode( nodePtr->getLeftChildPtr(), newNodeValue, newWordCount );
+	nodePtr->setLeftChildPtr( tempPtr );
 	nodePtr->setItem( newNodeValue );
 	nodePtr->setCount( newWordCount );
 	return nodePtr;
@@ -304,11 +320,13 @@ template<class ItemType>
 BinaryNode<ItemType>* BinarySearchTree<ItemType>::removeRightmostNode(BinaryNode<ItemType>* nodePtr,
                                             ItemType& inorderPredecessor, int& newWordCount)
 {
-
-
-	// add your code here
-
-
+	if (nodePtr->getRightChildPtr() == nullptr) {
+		inorderPredecessor = nodePtr->getItem();
+		newWordCount = nodePtr->getCount();
+		return removeNode(nodePtr);
+	}
+	else
+		return removeRightmostNode(nodePtr->getRightChildPtr(), inorderPredecessor, newWordCount);
 }
 
 #endif
