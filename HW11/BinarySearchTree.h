@@ -312,8 +312,11 @@ BinaryNode<ItemType>* BinarySearchTree<ItemType>::removeLeftmostNode(BinaryNode<
 		newWordCount = nodePtr->getCount();
 		return removeNode( nodePtr );
 	} 
-	else 
-		return removeLeftmostNode( nodePtr->getLeftChildPtr(), inorderSuccessor, newWordCount );
+	else {
+		nodePtr->setLeftChildPtr(removeLeftmostNode(nodePtr->getLeftChildPtr(), inorderSuccessor, newWordCount));
+		return nodePtr;
+	}
+		
 }
 
 template<class ItemType>
@@ -325,8 +328,11 @@ BinaryNode<ItemType>* BinarySearchTree<ItemType>::removeRightmostNode(BinaryNode
 		newWordCount = nodePtr->getCount();
 		return removeNode(nodePtr);
 	}
-	else
-		return removeRightmostNode(nodePtr->getRightChildPtr(), inorderPredecessor, newWordCount);
+	else {
+		nodePtr->setRightChildPtr(removeRightmostNode(nodePtr->getRightChildPtr(), inorderPredecessor, newWordCount));
+		return nodePtr;
+	}
+		
 }
 
 #endif
