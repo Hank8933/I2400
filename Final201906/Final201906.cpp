@@ -75,11 +75,9 @@ void pqArrayInsert(BinaryNode<string>* pqArray, int& size, const string word)
 			size++;
 			break;
 		}
-		else if (word.length() == pqArray[i].getItem().length()) {
-			if (word == pqArray[i].getItem()) {
-				pqArray[i].countUp();
-				break;
-			}
+		else if (word == pqArray[i].getItem()) {
+			pqArray[i].countUp();
+			break;
 		}
 	}
 

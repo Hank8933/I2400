@@ -131,7 +131,7 @@ vector <int> doBFS( int** matrixGraph, int numVertices, int vertexNo )
 	while (!que.empty()) {
 		int now = que.front();
 		
-		cout << "v " << now;;
+		cout << " v" << now;;
 		que.pop();
 		for (int i = 0; i < numVertices; i++) {
 			if (matrixGraph[now][i] < INT_MAX && !visited[i]) {
